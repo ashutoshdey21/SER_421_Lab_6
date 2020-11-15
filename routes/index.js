@@ -162,10 +162,10 @@ router.post('/login', function (req, res, next) {
         if(login_tokens[req.body.username] === undefined){
             login_tokens[req.body.username] = []
         }
-        login_tokens[req.body.username]+=[req.session.secret];
+        login_tokens[req.body.username].push(req.session.secret)
 
         console.log(req.session);
-        res.redirect("./viewNews");
+        res.redirect("/viewNews");
     }else {
         // res.redirect('/error');
         next(createError(401));
@@ -185,11 +185,13 @@ router.post('/logout', function (req, res, next) {
         // res.status(401);
         // res.send();
         // return ;
-
+        next(createError(401));
     }
+    console.log(login_tokens)
     if(login_tokens[req.session.username]){
         const index = login_tokens[req.session.username].indexOf(req.session.secret);
         if (index > -1) {
+            console.log(login_tokens[req.session.username]);
             login_tokens[req.session.username].splice(index, 1);
         }
     }
@@ -220,6 +222,7 @@ router.get('/error', function (req, res, next) {
 
 
 router.get('/viewNews', function (req, res, next) {
+
     if(isValidUser(req.session.username, req.session.secret))
     {
         fs.readFile(VIEW_NEWS_HTML, 'utf8',

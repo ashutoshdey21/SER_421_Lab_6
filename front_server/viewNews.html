@@ -27,6 +27,7 @@
 
 </div>
 
+<div id="error_message"></div>
 <div id="new_story_form">
 
 </div>
@@ -48,6 +49,7 @@ function initialSetup() {
     let create_story_link = document.getElementById('create_story_link');
     console.log(user_role)
     if(user_role === 'author'){
+        create_story_link.innerHTML = "";
         let a = document.createElement('a');
         a.setAttribute('href','javascript:ajax_create_story_form()')
         a.innerText = 'Create a new story';
@@ -66,7 +68,7 @@ function ajax_save_story() {
     let story_username = document.getElementById('story_username').value;
     request_body.content = story_content;
     request_body.title = story_title;
-    request_body.username = story_username;
+    request_body.author = story_username;
     request_body.date = new Date();
     let publicFlagTrue = document.getElementById('publicFlagTrue');
     let publicFlagFalse = document.getElementById('publicFlagFalse');
@@ -139,6 +141,13 @@ function renderResponse(request, function_name) {
         else if([401].includes(request.status)){
             console.log("error")
             window.location.href = '/error';
+        }
+        else if([500].includes(request.status)){
+            console.log("error")
+            let error_message = document.getElementById("error_message");
+            let a = document.createElement("a");
+            a.innerHTML = "Server side error. Please Try again later. "
+            error_message.appendChild(a);
         }
     }
 

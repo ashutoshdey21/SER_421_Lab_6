@@ -21,7 +21,6 @@ router.post('/create', function (req, res, next) {
     }
 
     console.log("request body for /create: ", req.body);
-    console.log(req.session.username);
     try {
         var result = newsServiceObj.addStory(req.body.title, req.body.content, req.body.author, req.body.isPublic, req.body.date)
         res.status(201);
@@ -316,6 +315,7 @@ function isValidUser(username, token) {
     }
 }
 
+
 function filter_all_stories(all_stories, userrole, username){
     let result_list = {};
     console.log(typeof (all_stories));
@@ -354,5 +354,6 @@ function filter_all_stories(all_stories, userrole, username){
     console.log("filterViewableStories: " + result_list);
     return result_list;
 }
+
 
 module.exports = router;

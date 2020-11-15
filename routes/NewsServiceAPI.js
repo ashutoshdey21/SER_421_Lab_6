@@ -23,10 +23,10 @@ router.post('/create', function (req, res, next) {
     console.log("request body for /create: ", req.body);
     console.log(req.session.username);
     try {
-        var result = newsServiceObj.addStory(req.body.title, req.body.content, req.session.username, req.body.isPublic, req.body.date)
+        var result = newsServiceObj.addStory(req.body.title, req.body.content, req.body.author, req.body.isPublic, req.body.date)
         res.status(201);
         console.log("Story Created with ID:", result);
-        res.send();
+        res.send(JSON.stringify("Story Created with ID: "+ result));
     } catch (e) {
         console.log(e);
         next(createError(500));
@@ -112,9 +112,19 @@ router.get('/search', function (req, res, next) {
         // return ;
     }
 
-    console.log("request body: ", req.body.filterJSON);
+    console.log("request body: ", req.query);
     try {
-        var result = newsServiceObj.getStoriesForFilter(req.body.filterJSON);
+        let filter = {};
+        if(req.query.author){
+            filter.author = req.query.author;
+        }
+        if(req.query.title){
+            filter.title = req.query.title;
+        }
+        if(req.query.startDate && req.query.endDate){
+            filter.dateRange = {startDate: req.query.startDate, endDate: req.query.endDate};
+        }
+        var result = newsServiceObj.getStoriesForFilter(filter);
         console.log(result)
         res.status(200);
         res.send(result);

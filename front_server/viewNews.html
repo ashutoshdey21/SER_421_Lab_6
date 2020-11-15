@@ -63,8 +63,10 @@ function ajax_save_story() {
 
     let story_content = document.getElementById('story_content').value;
     let story_title = document.getElementById('story_title').value;
+    let story_username = document.getElementById('story_username').value;
     request_body.content = story_content;
     request_body.title = story_title;
+    request_body.username = story_username;
     request_body.date = new Date();
     let publicFlagTrue = document.getElementById('publicFlagTrue');
     let publicFlagFalse = document.getElementById('publicFlagFalse');
@@ -241,7 +243,7 @@ function createStoryForm(form_html) {
 }
 
 
-function afterSaveStory() {
+function afterSaveStory(data) {
     console.log("afterSaveStory");
     initialSetup();
 

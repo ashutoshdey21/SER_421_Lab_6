@@ -11,9 +11,9 @@
 
 </h2>
 
-<div id="username"> username: $username1 </div>
+<div id="username"> username: <a>$username1</a> </div>
 
-<div id="use_role"> user role: $userrole </div>
+<div id="use_role"> user role: <a>$userrole</a> </div>
 
 <div id="viewNews">
 
@@ -21,7 +21,7 @@
 
 </div>
 
-<div id="create_story_link"><p><a href="javascript:ajax_create_story_form()"> Create a new story</a></div>
+<div id="create_story_link"></div>
 
 <div id="detailed_story">
 
@@ -44,6 +44,15 @@
 
 function initialSetup() {
     ajaxResult("GET",'/viewableStories','createViewableStories',null);
+    let user_role = document.getElementById('use_role').getElementsByTagName('a').item(0).innerText;
+    let create_story_link = document.getElementById('create_story_link');
+    console.log(user_role)
+    if(user_role === 'author'){
+        let a = document.createElement('a');
+        a.setAttribute('href','javascript:ajax_create_story_form()')
+        a.innerText = 'Create a new story';
+        create_story_link.appendChild(document.createElement("p").appendChild(a));
+    }
 
 }
 
@@ -153,7 +162,14 @@ function createDetailedStory(data) {
     detailed_story.appendChild(date);
 
     detailed_story.appendChild(document.createElement('p'));
-    detailed_story.appendChild(a);
+
+    let user_role = document.getElementById('use_role').getElementsByTagName('a').item(0).innerText;
+    let username = document.getElementById('username').getElementsByTagName('a').item(0).innerText;
+    if(user_role === 'author' && username === data.author){
+        detailed_story.appendChild(a);
+    }
+
+
 
     if(document.getElementById('create_story')){
         document.getElementById('create_story').innerText = "";
@@ -222,6 +238,7 @@ function afterSaveStory() {
     initialSetup();
 
 }
+
 
 function afterLogout() {
     window.location.href = '/landing';

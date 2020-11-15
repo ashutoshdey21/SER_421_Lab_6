@@ -126,33 +126,6 @@ router.get('/search', function (req, res, next) {
 });
 
 
-router.get('/getStoryByID', function (req, res, next) {
-
-    if(!isValidUser(req.session.username, req.session.secret)){
-        // res.redirect('/landing');
-        // res.status(401);
-        // res.send();
-        // return ;
-        next(createError(401));
-
-    }
-
-    console.log("request body: ", req.query);
-    try {
-        var result = newsServiceObj.getStoriesForFilter({id: req.query.id});
-        console.log(result[req.query.id])
-        res.status(200)
-        let send_data = result[req.query.id];
-        send_data.id = req.query.id;
-        res.send(send_data);
-    } catch (e) {
-        console.log(e);
-        next(createError(500));
-    }
-
-});
-
-
 router.post('/login', function (req, res, next) {
 
     if (req.body.username === req.body.password){
@@ -198,6 +171,33 @@ router.post('/logout', function (req, res, next) {
     req.session.destroy();
     res.status(201);
     res.send({link:"/landing"});
+});
+
+
+router.get('/getStoryByID', function (req, res, next) {
+
+    if(!isValidUser(req.session.username, req.session.secret)){
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
+        next(createError(401));
+
+    }
+
+    console.log("request body: ", req.query);
+    try {
+        var result = newsServiceObj.getStoriesForFilter({id: req.query.id});
+        console.log(result[req.query.id])
+        res.status(200)
+        let send_data = result[req.query.id];
+        send_data.id = req.query.id;
+        res.send(send_data);
+    } catch (e) {
+        console.log(e);
+        next(createError(500));
+    }
+
 });
 
 

@@ -97,9 +97,11 @@ function ajax_delete_story(story_id) {
     ajaxResult("DELETE",'/delete','afterDeleteStory', {id:story_id});
 }
 
+
 function ajax_logout(){
     ajaxResult("POST","/logout", 'afterLogout', {logout:"logout"});
 }
+
 
 function getRequestObject() {
     if (window.XMLHttpRequest) {

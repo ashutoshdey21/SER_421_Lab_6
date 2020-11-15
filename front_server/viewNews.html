@@ -121,17 +121,23 @@ function ajaxResult(request_type, address, function_name, request_body) {
 
 
 function renderResponse(request, function_name) {
-    if ((request.readyState === 4) &&
-        ([200,304,204,201].includes(request.status))){
-        console.log(request.responseText);
-        if(request.responseText){
-            this[function_name](request.responseText);
-        }
-        else {
-            this[function_name]();
-        }
+    if (request.readyState === 4){
+        if([200,304,204,201].includes(request.status)){
+            console.log(request.responseText);
+            if(request.responseText){
+                this[function_name](request.responseText);
+            }
+            else {
+                this[function_name]();
+            }
 
+        }
+        else if([401].includes(request.status)){
+            console.log("error")
+            window.location.href = '/error';
+        }
     }
+
 }
 
 
@@ -240,9 +246,12 @@ function afterSaveStory() {
 }
 
 
-function afterLogout() {
+function afterLogout(data) {
+    console.log(data);
     window.location.href = '/landing';
 }
+
+
 
 </script >
 

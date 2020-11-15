@@ -13,7 +13,11 @@ var fs = require('fs');
 router.post('/create', function (req, res, next) {
 
     if(!isValidUser(req.session.username, req.session.secret)){
-        res.redirect('/landing');
+        next(createError(401));
+        // res.status(401);
+        // res.send();
+        // return ;
+        // res.redirect('/landing');
     }
 
     console.log("request body for /create: ", req.body);
@@ -33,7 +37,12 @@ router.post('/create', function (req, res, next) {
 
 router.patch('/editTitle', function (req, res, next) {
     if(!isValidUser(req.session.username, req.session.secret)){
-        res.redirect('/landing');
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
+        next(createError(401));
+
     }
     console.log("request body: ", req.body);
     try {
@@ -51,7 +60,11 @@ router.patch('/editContent', function (req, res, next) {
 
 
     if(!isValidUser(req.session.username, req.session.secret)){
-        res.redirect('/landing');
+        // res.redirect('/landing');
+        next(createError(401));
+        // res.status(401);
+        // res.send();
+        // return ;
     }
     console.log("request body: ", req.body);
     try {
@@ -69,7 +82,11 @@ router.patch('/editContent', function (req, res, next) {
 router.delete('/delete', function (req, res, next) {
 
     if(!isValidUser(req.session.username, req.session.secret)){
-        res.redirect('/landing');
+        next(createError(401));
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
     }
     console.log("request body: ", req.body.id);
 
@@ -88,7 +105,11 @@ router.delete('/delete', function (req, res, next) {
 router.get('/search', function (req, res, next) {
 
     if(!isValidUser(req.session.username, req.session.secret)){
-        res.redirect('/landing');
+        next(createError(401));
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
     }
 
     console.log("request body: ", req.body.filterJSON);
@@ -108,7 +129,12 @@ router.get('/search', function (req, res, next) {
 router.get('/getStoryByID', function (req, res, next) {
 
     if(!isValidUser(req.session.username, req.session.secret)){
-        res.redirect('/landing');
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
+        next(createError(401));
+
     }
 
     console.log("request body: ", req.query);
@@ -141,9 +167,35 @@ router.post('/login', function (req, res, next) {
         console.log(req.session);
         res.redirect("./viewNews");
     }else {
-        res.redirect('/error');
+        // res.redirect('/error');
+        next(createError(401));
+        // res.status(401);
+        // res.send();
+
     }
 
+});
+
+
+router.post('/logout', function (req, res, next) {
+
+
+    if(!isValidUser(req.session.username, req.session.secret)){
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
+
+    }
+    if(login_tokens[req.session.username]){
+        const index = login_tokens[req.session.username].indexOf(req.session.secret);
+        if (index > -1) {
+            login_tokens[req.session.username].splice(index, 1);
+        }
+    }
+    req.session.destroy();
+    res.status(201);
+    res.send({link:"/landing"});
 });
 
 
@@ -157,13 +209,12 @@ router.get('/error', function (req, res, next) {
         '</head>\n' +
         '<body>\n' +
         '<header>\n' +
-        '    <h1> Login credentials not found. </h1>\n' +
+        '    <h1> Invalid Login credentials. </h1>\n' +
         '</header>\n' +
         '<p><a href=\'/landing\'>Login Again</a></p>\n' +
         '</body>\n' +
         '</html>';
 
-    res.status(401);
     res.send(errorPage);
 });
 
@@ -183,7 +234,12 @@ router.get('/viewNews', function (req, res, next) {
             });
     }
     else {
-        res.redirect('/landing');
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
+        next(createError(401));
+
     }
 });
 
@@ -203,26 +259,13 @@ router.get('/createStoryForm', function (req, res, next) {
             });
     }
     else {
-        res.redirect('/landing');
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
+        next(createError(401));
+
     }
-});
-
-
-router.post('/logout', function (req, res, next) {
-
-
-    if(!isValidUser(req.session.username, req.session.secret)){
-        res.redirect('/landing');
-    }
-    if(login_tokens[req.session.username]){
-        const index = login_tokens[req.session.username].indexOf(req.session.secret);
-        if (index > -1) {
-            login_tokens[req.session.username].splice(index, 1);
-        }
-    }
-    req.session.destroy();
-    res.status(201);
-    res.send();
 });
 
 
@@ -239,8 +282,12 @@ router.get('/landing', function (req, res, next) {
 router.get('/viewableStories', function (req, res, next) {
 
     if(!isValidUser(req.session.username, req.session.secret)){
-        res.redirect('/landing');
-        return;
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
+        next(createError(401));
+
     }
     let all_stories = newsServiceObj.getStoriesForFilter({});
     let view_all_stories = filter_all_stories(all_stories, req.session.userrole, req.session.username );

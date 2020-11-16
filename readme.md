@@ -1,4 +1,9 @@
-Activity 1:
+**Execution**:
+In order to start the project please execute:
+node SER_421_Lab_5/bin/www
+
+
+**Activity 1**:
 routes/NewsServiceAPI.js
 
 API info:
@@ -13,7 +18,7 @@ Note: all the below endpoints would work as expected only if we have received a 
 '/search': returns a list of articles based on one or more of the following criteria: author, start date, end date, title text
 '/logout': invalidates the current session.
  
-Activity 2:
+**Activity 2**:
 
 initialization:
 ```
@@ -48,7 +53,6 @@ var session = require('express-session');
 ```
 
 API info:
-
 '/getStoryByID': returns the story with a particular id.
 '/error': sends sn error page to the server.
 '/viewNews': renders the initial view news pages on the client.

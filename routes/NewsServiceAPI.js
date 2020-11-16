@@ -32,6 +32,11 @@ router.post('/create', function (req, res, next) {
     }
 
 });
+router.all('/create', function (req, res, next) {
+
+    next(createError(405));
+
+});
 
 
 router.patch('/editTitle', function (req, res, next) {
@@ -52,6 +57,11 @@ router.patch('/editTitle', function (req, res, next) {
         console.log(e);
         next(createError(500));
     }
+});
+router.all('/editTitle', function (req, res, next) {
+
+    next(createError(405));
+
 });
 
 
@@ -76,6 +86,11 @@ router.patch('/editContent', function (req, res, next) {
         next(createError(500));
     }
 });
+router.all('/editContent', function (req, res, next) {
+
+    next(createError(405));
+
+});
 
 
 router.delete('/delete', function (req, res, next) {
@@ -97,6 +112,11 @@ router.delete('/delete', function (req, res, next) {
         console.log(e);
         next(createError(500));
     }
+
+});
+router.all('/delete', function (req, res, next) {
+
+    next(createError(405));
 
 });
 
@@ -133,6 +153,11 @@ router.get('/search', function (req, res, next) {
     }
 
 });
+router.all('/search', function (req, res, next) {
+
+    next(createError(405));
+
+});
 
 
 router.post('/login', function (req, res, next) {
@@ -155,6 +180,11 @@ router.post('/login', function (req, res, next) {
         // res.send();
 
     }
+
+});
+router.all('/login', function (req, res, next) {
+
+    next(createError(405));
 
 });
 
@@ -180,6 +210,11 @@ router.post('/logout', function (req, res, next) {
     req.session.destroy();
     res.status(201);
     res.send({link:"/landing"});
+});
+router.all('/logout', function (req, res, next) {
+
+    next(createError(405));
+
 });
 
 
@@ -208,7 +243,11 @@ router.get('/getStoryByID', function (req, res, next) {
     }
 
 });
+router.all('/getStoryByID', function (req, res, next) {
 
+    next(createError(405));
+
+});
 
 router.get('/error', function (req, res, next) {
 
@@ -227,6 +266,11 @@ router.get('/error', function (req, res, next) {
         '</html>';
 
     res.send(errorPage);
+});
+router.all('/error', function (req, res, next) {
+
+    next(createError(405));
+
 });
 
 
@@ -254,6 +298,11 @@ router.get('/viewNews', function (req, res, next) {
 
     }
 });
+router.all('/viewNews', function (req, res, next) {
+
+    next(createError(405));
+
+});
 
 
 router.get('/createStoryForm', function (req, res, next) {
@@ -279,6 +328,11 @@ router.get('/createStoryForm', function (req, res, next) {
 
     }
 });
+router.all('/createStoryForm', function (req, res, next) {
+
+    next(createError(405));
+
+});
 
 
 router.get('/', function (req, res, next) {
@@ -288,6 +342,11 @@ router.get('/', function (req, res, next) {
 
 router.get('/landing', function (req, res, next) {
     res.redirect("./landing.html");
+});
+router.all('/landing', function (req, res, next) {
+
+    next(createError(405));
+
 });
 
 
@@ -305,6 +364,11 @@ router.get('/viewableStories', function (req, res, next) {
     let view_all_stories = filter_all_stories(all_stories, req.session.userrole, req.session.username );
     console.log(view_all_stories);
     res.send(JSON.stringify(view_all_stories));
+
+});
+router.all('/viewableStories', function (req, res, next) {
+
+    next(createError(405));
 
 });
 

@@ -1,6 +1,7 @@
 **Execution**:
 In order to start the project please execute:
 node SER_421_Lab_5/bin/www
+Go to 'http://localhost:3000/'
 
 
 **Activity 1**:

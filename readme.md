@@ -20,6 +20,10 @@ Note: all the below endpoints would work as expected only if we have received a 
 '/logout': invalidates the current session.
 
 Activity 1 Postman collection file: NewsService_test.json
+Import the NewsService_test.json file into Postman.
+Send a POST request to '/login' with the required info in the request body.
+All the endpoints would work as expected only if we have received a successful response after hitting the '/login' endpoint.
+
  
 **Activity 2**:
 

@@ -18,6 +18,8 @@ Note: all the below endpoints would work as expected only if we have received a 
 '/delete': deletes an existing article(we need to know the id of the article).
 '/search': returns a list of articles based on one or more of the following criteria: author, start date, end date, title text
 '/logout': invalidates the current session.
+
+Activity 1 Postman collection file: NewsService_test.json
  
 **Activity 2**:
 

@@ -79,9 +79,17 @@ var NewsService = function () {
             throw new Error(INVALID_ARGUMENT + " - ID should be a number");
         }
         console.log("Deleting News Story, ID: " + id);
-        PersistenceStore.getPersistenceStoreInstance().deleteStory(id);
+        try {
+            PersistenceStore.getPersistenceStoreInstance().deleteStory(id);
+        } catch (err) {
+            console.log(err)
+            if (err.message.includes(INVALID_KEY)) {
+                throw new Error(NEWS_STORY_NOT_FOUND);
+            } else {
+                throw err;
+            }
+        }
     }
-
     /**
      * Below code returns the news stories which match the given filter object.
      * if filter object is empty all stories are returned.

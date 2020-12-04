@@ -115,6 +115,8 @@ var PersistenceStore = function () {
         let data = this.getDataFromFileAsObj();
         if (id in data[NEWS_STORIES_KEY]) {
             delete data[NEWS_STORIES_KEY][id];
+        }else {
+            throw new Error(INVALID_KEY);
         }
         this.writeToDataFile(data);
     }

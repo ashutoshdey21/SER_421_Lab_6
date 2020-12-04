@@ -1,33 +1,36 @@
-const VIEW_NEWS_HTML = './front_server/viewNews.html';
-const NEW_STORY_FORM_HTML = './front_server/new_story_form.html';
+/*const VIEW_NEWS_HTML = './front_server/viewNews.html';
+const NEW_STORY_FORM_HTML = './front_server/new_story_form.html';*/
 const INVALID_ARGUMENT = "InvalidArgument";
-const STORY_DOES_NOT_EXIST = "NewsStoryNotFound"
+const NEWS_STORY_NOT_FOUND = "NewsStoryNotFound";
+const VALID_PARAMS = ['id', 'content', 'title', 'startDate', 'endDate', 'author'];
 
 
 var express = require('express');
 var router = express.Router();
 let news_service = require('../news_service/NewsService.js');
 let newsServiceObj = new news_service();
-var login_tokens = new Map();
-var crypto = require('crypto');
 const createError = require("http-errors");
-var fs = require('fs');
 
-router.post('/stories', function (req, res, next) {
+/*var login_tokens = new Map();
+var crypto = require('crypto');
+var fs = require('fs');*/
 
-    if(!isValidUser(req.session.username, req.session.secret)){
-        next(createError(401));
-        // res.status(401);
-        // res.send();
-        // return ;
-        // res.redirect('/landing');
+function isValidKeys(query) {
+    for( let value of query){
+        if(!VALID_PARAMS.includes(value)){
+            return false;
+        }
     }
+    return true;
+}
+router.post('/stories', function (req, res, next) {
 
     console.log("request body for /create: ", req.body);
     try {
         var result = newsServiceObj.addStory(req.body.title, req.body.content, req.body.author, req.body.isPublic, req.body.date)
         res.status(201);
         console.log("Story Created with ID:", result);
+        res.setHeader('Location', 'http://'+ req.headers.host + '/stories?id='+ result);
         res.send(JSON.stringify("Story Created with ID: "+ result));
     } catch (e) {
         console.log(e);
@@ -42,17 +45,17 @@ router.post('/stories', function (req, res, next) {
 });
 router.get('/stories', function (req, res, next) {
 
-    if(!isValidUser(req.session.username, req.session.secret)){
-        next(createError(401));
-        // res.redirect('/landing');
-        // res.status(401);
-        // res.send();
-        // return ;
-    }
-
     console.log("request body: ", req.query);
+    if(!isValidKeys(Object.keys(req.query))){
+        next(createError(400));
+        return ;
+    }
+    console.log("should not be here")
     try {
         let filter = {};
+        if(req.query.id){
+            filter.id = req.query.id;
+        }
         if(req.query.author){
             filter.author = req.query.author;
         }
@@ -63,6 +66,15 @@ router.get('/stories', function (req, res, next) {
             filter.dateRange = {startDate: req.query.startDate, endDate: req.query.endDate};
         }
         var result = newsServiceObj.getStoriesForFilter(filter);
+        if(req.query.id){
+            let send_data = result[req.query.id];
+            if(send_data) {
+                send_data.id = req.query.id;
+                res.send(send_data);
+            }else {
+                next(createError(404));
+            }
+        }
         console.log(result)
         res.status(200);
         res.send(result);
@@ -79,13 +91,6 @@ router.get('/stories', function (req, res, next) {
 });
 router.delete('/stories', function (req, res, next) {
 
-    if(!isValidUser(req.session.username, req.session.secret)){
-        next(createError(401));
-        // res.redirect('/landing');
-        // res.status(401);
-        // res.send();
-        // return ;
-    }
     console.log("request body: ", req.body.id);
 
     try {
@@ -97,7 +102,7 @@ router.delete('/stories', function (req, res, next) {
         if(e.toString().includes(INVALID_ARGUMENT)){
             next(createError(400));
         }
-        if(e.toString().includes(STORY_DOES_NOT_EXIST)){
+        if(e.toString().includes(NEWS_STORY_NOT_FOUND)){
             next(createError(404));
         }
         else {
@@ -107,14 +112,6 @@ router.delete('/stories', function (req, res, next) {
 
 });
 router.patch('/stories', function (req, res, next) {
-    if(!isValidUser(req.session.username, req.session.secret)){
-        // res.redirect('/landing');
-        // res.status(401);
-        // res.send();
-        // return ;
-        next(createError(401));
-
-    }
     console.log("request body: ", req.body);
     try {
         if(req.body.title) {
@@ -128,7 +125,7 @@ router.patch('/stories', function (req, res, next) {
         res.send();
     } catch (e) {
         console.log(e);
-        if(e.toString().includes(STORY_DOES_NOT_EXIST)){
+        if(e.toString().includes(NEWS_STORY_NOT_FOUND)){
             next(createError(404));
         }
         else {
@@ -142,6 +139,7 @@ router.all('/stories', function (req, res, next) {
 
 });
 
+/*
 
 router.post('/login', function (req, res, next) {
 
@@ -201,36 +199,7 @@ router.all('/logout', function (req, res, next) {
 });
 
 
-router.get('/getStoryByID', function (req, res, next) {
 
-    if(!isValidUser(req.session.username, req.session.secret)){
-        // res.redirect('/landing');
-        // res.status(401);
-        // res.send();
-        // return ;
-        next(createError(401));
-
-    }
-
-    console.log("request body: ", req.query);
-    try {
-        var result = newsServiceObj.getStoriesForFilter({id: req.query.id});
-        console.log(result[req.query.id])
-        res.status(200)
-        let send_data = result[req.query.id];
-        send_data.id = req.query.id;
-        res.send(send_data);
-    } catch (e) {
-        console.log(e);
-        next(createError(500));
-    }
-
-});
-router.all('/getStoryByID', function (req, res, next) {
-
-    next(createError(405));
-
-});
 
 router.get('/error', function (req, res, next) {
 
@@ -317,7 +286,6 @@ router.all('/createStoryForm', function (req, res, next) {
 
 });
 
-
 router.get('/', function (req, res, next) {
     res.redirect("./landing.html");
 });
@@ -401,6 +369,7 @@ function filter_all_stories(all_stories, userrole, username){
     console.log("filterViewableStories: " + result_list);
     return result_list;
 }
+*/
 
 
 module.exports = router;

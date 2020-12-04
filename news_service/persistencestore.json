@@ -133,13 +133,6 @@
 			"date": "Sun, 23 Aug 2020 07:00:00 GMT",
 			"isPublic": false
 		},
-		"34": {
-			"title": "Kafka",
-			"content": "Bla",
-			"author": "Blaster",
-			"date": "Sun, 23 Aug 2020 07:00:00 GMT",
-			"isPublic": false
-		},
 		"36": {
 			"title": "Kafka",
 			"content": "Bla",
@@ -307,7 +300,28 @@
 			"author": "Master",
 			"date": "Sun, 23 Aug 2020 07:00:00 GMT",
 			"isPublic": true
+		},
+		"67": {
+			"title": "Bla",
+			"content": "Bla",
+			"author": "Master",
+			"date": "Sun, 23 Aug 2020 07:00:00 GMT",
+			"isPublic": true
+		},
+		"68": {
+			"title": "Bla",
+			"content": "Bla",
+			"author": "Master",
+			"date": "Sun, 23 Aug 2020 07:00:00 GMT",
+			"isPublic": true
+		},
+		"69": {
+			"title": "Bla",
+			"content": "Bla",
+			"author": "Master",
+			"date": "Sun, 23 Aug 2020 07:00:00 GMT",
+			"isPublic": true
 		}
 	},
-	"LATEST_ID": 66
+	"LATEST_ID": 69
 }

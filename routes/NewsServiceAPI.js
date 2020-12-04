@@ -1,8 +1,7 @@
-/*const VIEW_NEWS_HTML = './front_server/viewNews.html';
-const NEW_STORY_FORM_HTML = './front_server/new_story_form.html';*/
+
 const INVALID_ARGUMENT = "InvalidArgument";
 const NEWS_STORY_NOT_FOUND = "NewsStoryNotFound";
-const VALID_PARAMS = ['id', 'content', 'title', 'startDate', 'endDate', 'author'];
+const VALID_PARAMS = ['content', 'title', 'startDate', 'endDate', 'author'];
 
 
 var express = require('express');
@@ -10,10 +9,6 @@ var router = express.Router();
 let news_service = require('../news_service/NewsService.js');
 let newsServiceObj = new news_service();
 const createError = require("http-errors");
-
-/*var login_tokens = new Map();
-var crypto = require('crypto');
-var fs = require('fs');*/
 
 function isValidKeys(query) {
     for( let value of query){
@@ -30,7 +25,7 @@ router.post('/stories', function (req, res, next) {
         var result = newsServiceObj.addStory(req.body.title, req.body.content, req.body.author, req.body.isPublic, req.body.date)
         res.status(201);
         console.log("Story Created with ID:", result);
-        res.setHeader('Location', 'http://'+ req.headers.host + '/stories?id='+ result);
+        res.setHeader('Location', 'http://'+ req.headers.host + '/stories/id/'+ result);
         res.send(JSON.stringify("Story Created with ID: "+ result));
     } catch (e) {
         console.log(e);
@@ -53,9 +48,6 @@ router.get('/stories', function (req, res, next) {
     console.log("should not be here")
     try {
         let filter = {};
-        if(req.query.id){
-            filter.id = req.query.id;
-        }
         if(req.query.author){
             filter.author = req.query.author;
         }
@@ -65,17 +57,8 @@ router.get('/stories', function (req, res, next) {
         if(req.query.startDate && req.query.endDate){
             filter.dateRange = {startDate: req.query.startDate, endDate: req.query.endDate};
         }
-        var result = newsServiceObj.getStoriesForFilter(filter);
-        if(req.query.id){
-            let send_data = result[req.query.id];
-            if(send_data) {
-                send_data.id = req.query.id;
-                res.send(send_data);
-            }else {
-                next(createError(404));
-            }
-        }
-        console.log(result)
+        let result = newsServiceObj.getStoriesForFilter(filter);
+        console.log(result);
         res.status(200);
         res.send(result);
     } catch (e) {
@@ -89,12 +72,38 @@ router.get('/stories', function (req, res, next) {
     }
 
 });
-router.delete('/stories', function (req, res, next) {
-
-    console.log("request body: ", req.body.id);
+router.get('/stories/:id', function (req, res, next) {
 
     try {
-        var result = newsServiceObj.deleteStory(req.body.id)
+        let filter = {id: req.params.id};
+        var result = newsServiceObj.getStoriesForFilter(filter);
+
+            let send_data = result[req.params.id];
+            if(send_data) {
+                send_data.id = req.params.id;
+                console.log(result);
+                res.status(200);
+                res.send(send_data);
+            }else {
+                next(createError(404));
+            }
+    } catch (e) {
+        console.log(e);
+        if(e.toString().includes(INVALID_ARGUMENT)){
+            next(createError(400));
+        }
+        else {
+            next(createError(500));
+        }
+    }
+
+});
+router.delete('/stories/:id', function (req, res, next) {
+
+    console.log("request param - id: ", req.params.id);
+
+    try {
+        var result = newsServiceObj.deleteStory(req.params.id)
         res.status(204);
         res.send(result);
     } catch (e) {

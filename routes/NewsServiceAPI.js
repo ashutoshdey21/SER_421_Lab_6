@@ -1,5 +1,8 @@
 const VIEW_NEWS_HTML = './front_server/viewNews.html';
 const NEW_STORY_FORM_HTML = './front_server/new_story_form.html';
+const INVALID_ARGUMENT = "InvalidArgument";
+const STORY_DOES_NOT_EXIST = "NewsStoryNotFound"
+
 
 var express = require('express');
 var router = express.Router();
@@ -10,7 +13,7 @@ var crypto = require('crypto');
 const createError = require("http-errors");
 var fs = require('fs');
 
-router.post('/create', function (req, res, next) {
+router.post('/stories', function (req, res, next) {
 
     if(!isValidUser(req.session.username, req.session.secret)){
         next(createError(401));
@@ -28,100 +31,16 @@ router.post('/create', function (req, res, next) {
         res.send(JSON.stringify("Story Created with ID: "+ result));
     } catch (e) {
         console.log(e);
-        next(createError(500));
+        if(e.toString().includes(INVALID_ARGUMENT)){
+            next(createError(400));
+        }
+        else {
+            next(createError(500));
+        }
     }
 
 });
-router.all('/create', function (req, res, next) {
-
-    next(createError(405));
-
-});
-
-
-router.patch('/editTitle', function (req, res, next) {
-    if(!isValidUser(req.session.username, req.session.secret)){
-        // res.redirect('/landing');
-        // res.status(401);
-        // res.send();
-        // return ;
-        next(createError(401));
-
-    }
-    console.log("request body: ", req.body);
-    try {
-        var result = newsServiceObj.updateTitle(req.body.id, req.body.title)
-        res.status(204);
-        res.send();
-    } catch (e) {
-        console.log(e);
-        next(createError(500));
-    }
-});
-router.all('/editTitle', function (req, res, next) {
-
-    next(createError(405));
-
-});
-
-
-router.patch('/editContent', function (req, res, next) {
-
-
-    if(!isValidUser(req.session.username, req.session.secret)){
-        // res.redirect('/landing');
-        next(createError(401));
-        // res.status(401);
-        // res.send();
-        // return ;
-    }
-    console.log("request body: ", req.body);
-    try {
-        var result = newsServiceObj.updateContent(req.body.id, req.body.content)
-
-        res.status(204);
-        res.send();
-    } catch (e) {
-        console.log(e);
-        next(createError(500));
-    }
-});
-router.all('/editContent', function (req, res, next) {
-
-    next(createError(405));
-
-});
-
-
-router.delete('/delete', function (req, res, next) {
-
-    if(!isValidUser(req.session.username, req.session.secret)){
-        next(createError(401));
-        // res.redirect('/landing');
-        // res.status(401);
-        // res.send();
-        // return ;
-    }
-    console.log("request body: ", req.body.id);
-
-    try {
-        var result = newsServiceObj.deleteStory(req.body.id)
-        res.status(204);
-        res.send(result);
-    } catch (e) {
-        console.log(e);
-        next(createError(500));
-    }
-
-});
-router.all('/delete', function (req, res, next) {
-
-    next(createError(405));
-
-});
-
-
-router.get('/search', function (req, res, next) {
+router.get('/stories', function (req, res, next) {
 
     if(!isValidUser(req.session.username, req.session.secret)){
         next(createError(401));
@@ -149,11 +68,75 @@ router.get('/search', function (req, res, next) {
         res.send(result);
     } catch (e) {
         console.log(e);
-        next(createError(500));
+        if(e.toString().includes(INVALID_ARGUMENT)){
+            next(createError(400));
+        }
+        else {
+            next(createError(500));
+        }
     }
 
 });
-router.all('/search', function (req, res, next) {
+router.delete('/stories', function (req, res, next) {
+
+    if(!isValidUser(req.session.username, req.session.secret)){
+        next(createError(401));
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
+    }
+    console.log("request body: ", req.body.id);
+
+    try {
+        var result = newsServiceObj.deleteStory(req.body.id)
+        res.status(204);
+        res.send(result);
+    } catch (e) {
+        console.log(e);
+        if(e.toString().includes(INVALID_ARGUMENT)){
+            next(createError(400));
+        }
+        if(e.toString().includes(STORY_DOES_NOT_EXIST)){
+            next(createError(404));
+        }
+        else {
+            next(createError(500));
+        }
+    }
+
+});
+router.patch('/stories', function (req, res, next) {
+    if(!isValidUser(req.session.username, req.session.secret)){
+        // res.redirect('/landing');
+        // res.status(401);
+        // res.send();
+        // return ;
+        next(createError(401));
+
+    }
+    console.log("request body: ", req.body);
+    try {
+        if(req.body.title) {
+            var result = newsServiceObj.updateTitle(req.body.id, req.body.title)
+        }
+        else if(req.body.content){
+            var result = newsServiceObj.updateContent(req.body.id, req.body.content)
+
+        }
+        res.status(204);
+        res.send();
+    } catch (e) {
+        console.log(e);
+        if(e.toString().includes(STORY_DOES_NOT_EXIST)){
+            next(createError(404));
+        }
+        else {
+            next(createError(500));
+        }
+    }
+});
+router.all('/stories', function (req, res, next) {
 
     next(createError(405));
 

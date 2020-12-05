@@ -152,7 +152,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\":\"40\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -160,14 +160,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/stories",
+					"raw": "http://localhost:3000/stories/69",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"stories"
+						"stories",
+						"69"
 					]
 				}
 			},
@@ -180,7 +181,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\":\"2000\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -188,14 +189,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/delete",
+					"raw": "http://localhost:3000/stories/2000",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"delete"
+						"stories",
+						"2000"
 					]
 				}
 			},

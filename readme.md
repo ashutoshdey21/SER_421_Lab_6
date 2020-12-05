@@ -9,11 +9,11 @@ routes/NewsAPI_REST.js
 
 API info:
  
-POST '/stories': creates a new article.
-GET '/stories/:id' gets the story with the particular id
-PATCH '/editContent': edits the title or content of an existing article(we need to know the id of the article).
-DELETE '/stories/:id': deletes an existing article(we need to know the id of the article).
-GET '/stories': returns a list of articles based on one or more of the following criteria: author, start date, end date, title text
+POST '/stories'- creates a new article.
+GET '/stories/:id'- gets the story with the particular id
+PATCH '/stories': edits the title or content of an existing article(we need to know the id of the article).
+DELETE '/stories/:id'- deletes an existing article(we need to know the id of the article).
+GET '/stories'- returns a list of articles based on one or more of the following criteria: author, start date, end date, title text
 
 Activity Postman collection file: NewsService_test.json
 Import the NewsService_test.json file into Postman.

@@ -315,7 +315,14 @@
 			"date": "Sun, 23 Aug 2020 07:00:00 GMT",
 			"isPublic": true
 		},
-		"69": {
+		"70": {
+			"title": "Bla",
+			"content": "Bla",
+			"author": "Master",
+			"date": "Sun, 23 Aug 2020 07:00:00 GMT",
+			"isPublic": true
+		},
+		"71": {
 			"title": "Bla",
 			"content": "Bla",
 			"author": "Master",
@@ -323,5 +330,5 @@
 			"isPublic": true
 		}
 	},
-	"LATEST_ID": 69
+	"LATEST_ID": 71
 }

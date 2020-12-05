@@ -6,7 +6,7 @@ const VALID_PARAMS = ['content', 'title', 'startDate', 'endDate', 'author'];
 
 var express = require('express');
 var router = express.Router();
-let news_service = require('../news_service/NewsService.js');
+let news_service = require('../newsModel/NewsService.js');
 let newsServiceObj = new news_service();
 const createError = require("http-errors");
 

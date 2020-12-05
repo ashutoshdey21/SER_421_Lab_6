@@ -1,11 +1,11 @@
 **Execution**:
 In order to start the project please execute:
-node SER_421_Lab_5/bin/www
+node SER_421_Lab_6/bin/www
 Server Starts at 'http://localhost:3000/'
 
 
 **Activity **:
-routes/NewsServiceAPI.js
+routes/NewsAPI_REST.js
 
 API info:
  

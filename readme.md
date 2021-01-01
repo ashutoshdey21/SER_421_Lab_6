@@ -1,10 +1,12 @@
 **Execution**:
+
 In order to start the project please execute:
 node SER_421_Lab_6/bin/www
 Server Starts at 'http://localhost:3000/'
 
 
 **Activity**:
+
 routes/NewsAPI_REST.js
 
 **API info**:
@@ -21,6 +23,7 @@ Import the NewsService_test.json file into Postman.
  
 
 **Initialization**:
+
 ```
 let news_service = require('../news_service/NewsService.js');
 let newsServiceObj = new news_service();
@@ -30,8 +33,6 @@ let newsServiceObj = new news_service();
 *Whenever the username is same as the password, it will be treated as a successful authentication.
 *We have used the 'crypto' package in order to generate the token and set it up on the req.session.
 *Hence in subsequent request we will be having the token.
-
-
 
 
 Please take note of the following packages.
